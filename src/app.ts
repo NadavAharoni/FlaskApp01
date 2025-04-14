@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Toggle task completion
   taskList.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement;
-    if (target.tagName === 'INPUT' && target.type === 'checkbox') {
+    if (target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'checkbox') {
       const checkbox = target as HTMLInputElement;
       const taskId = parseInt(checkbox.dataset.id || '0');
       const completed = checkbox.checked;
