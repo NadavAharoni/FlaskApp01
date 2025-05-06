@@ -3,22 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TypeScript Task Manager</title>
+  <title>My Tasks</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Task Manager</h1>
-    
-    <form id="task-form">
-      <input type="text" id="task-input" placeholder="Add a new task..." required>
-      <button type="submit">Add Task</button>
-    </form>
-    
-    <div class="tasks-container">
-      <h2>Your Tasks</h2>
-      <ul id="task-list"></ul>
+  <div id="app">
+    <!-- Login/Register View -->
+    <div id="auth-container" class="auth-container">
+      <div class="auth-box">
+        <h1>Task Manager</h1>
+        
+        <div id="auth-tabs" class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Login</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+        
+        <div id="login-form" class="auth-form active">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="Your email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Your password" required>
+          </div>
+          <button id="login-button" class="auth-button">Login</button>
+          <div id="login-error" class="auth-error"></div>
+        </div>
+        
+        <div id="register-form" class="auth-form">
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" placeholder="Your email" required>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" placeholder="Your password" required>
+          </div>
+          <div class="form-group">
+            <label for="register-confirm">Confirm Password</label>
+            <input type="password" id="register-confirm" placeholder="Confirm password" required>
+          </div>
+          <button id="register-button" class="auth-button">Register</button>
+          <div id="register-error" class="auth-error"></div>
+        </div>
+        
+        <div class="auth-divider">
+          <span>OR</span>
+        </div>
+        
+        <button id="google-login" class="google-button">
+          <i class="fab fa-google"></i> Continue with Google
+        </button>
+      </div>
     </div>
+    
+    <!-- Main App View (Task Manager) -->
+    <div id="main-container" class="container hidden">
+      <header class="app-header">
+        <h1 id="app-title">My Tasks</h1>
+        <div class="profile-container">
+          <button id="profile-button" class="profile-button">
+            <i class="fas fa-user"></i>
+          </button>
+          <div id="profile-dropdown" class="profile-dropdown hidden">
+            <div id="user-info" class="user-info">
+              <span id="user-name">User</span>
+              <span id="user-email">user@example.com</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button id="edit-profile-button" class="dropdown-item">
+              <i class="fas fa-user-edit"></i> Edit Profile
+            </button>
+            <button id="logout-button" class="dropdown-item">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+      </header>
+      
+      <form id="task-form">
+        <input type="text" id="task-input" placeholder="Add a new task..." required>
+        <button type="submit">Add Task</button>
+      </form>
+      
+      <div class="tasks-container">
+        <h2>Your Tasks</h2>
+        <ul id="task-list"></ul>
+      </div>
+    </div>
+    
+    <!-- Edit Profile Modal -->
+    <div id="profile-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <button id="close-modal" class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" placeholder="First Name">
+          </div>
+          <div class="form-group">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" placeholder="Last Name">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="save-profile" class="auth-button">Save Changes</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Overlay for modals -->
+    <div id="overlay" class="overlay hidden"></div>
   </div>
   
   <script src="dist/app.js"></script>
