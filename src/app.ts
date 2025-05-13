@@ -137,15 +137,30 @@ class AuthManager {
   }
   
   public initiateGoogleLogin(): void {
+    // Clear any existing error messages
+    const loginError = document.getElementById('login-error') as HTMLDivElement;
+    loginError.textContent = '';
+    
     fetch('/api/auth/google')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to start Google authentication');
+        }
+        return response.json();
+      })
       .then(data => {
         if (data.auth_url) {
+          // Store timestamp for validation when we return
+          localStorage.setItem('google_auth_started', Date.now().toString());
+          // Navigate to Google's auth page
           window.location.href = data.auth_url;
+        } else {
+          throw new Error('No authentication URL received');
         }
       })
       .catch(error => {
         console.error('Google login error:', error);
+        loginError.textContent = 'Failed to start Google authentication';
       });
   }
   
@@ -490,8 +505,49 @@ class UIManager {
   }
 }
 
+function checkForAuthErrors() {
+  const urlParams = new URLSearchParams(window.location.hash.substring(1));
+  const error = urlParams.get('/login?error');
+  
+  if (error) {
+    const loginError = document.getElementById('login-error');
+    if (loginError) {
+      switch (error) {
+        case 'invalid_state':
+          loginError.textContent = 'Authentication error: Session validation failed';
+          break;
+        case 'token_error':
+          loginError.textContent = 'Authentication error: Failed to exchange authorization code';
+          break;
+        case 'missing_user_info':
+          loginError.textContent = 'Authentication error: Could not get user information';
+          break;
+        case 'oauth_error':
+          loginError.textContent = 'Authentication error: OAuth process failed';
+          break;
+        default:
+          loginError.textContent = 'Authentication failed';
+      }
+      
+      // Clean the URL
+      window.history.replaceState({}, document.title, '/');
+      
+      // Show the login form
+      const authContainer = document.getElementById('auth-container');
+      const mainContainer = document.getElementById('main-container');
+      if (authContainer && mainContainer) {
+        authContainer.classList.remove('hidden');
+        mainContainer.classList.add('hidden');
+      }
+    }
+  }
+}
+
+
 // Initialize the application when DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
+  checkForAuthErrors();
+
   const authManager = AuthManager.getInstance();
   const taskManager = new TaskManager();
   const uiManager = new UIManager(authManager, taskManager);
