@@ -136,6 +136,14 @@ class AuthManager {
     }
   }
   
+  /**
+   * Initiates the Google login process by fetching the authentication URL
+   * from the server and redirecting the user to Google's authentication page.
+   * 
+   * This function is triggered when the user clicks the "Google login" button
+   * in the UI. The event listener for this button is set up in the `UIManager`
+   * class within the `setupEventListeners` method.
+   */
   public initiateGoogleLogin(): void {
     // Clear any existing error messages
     const loginError = document.getElementById('login-error') as HTMLDivElement;
