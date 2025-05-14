@@ -7,6 +7,9 @@ import json
 from functools import wraps
 from urllib.parse import urlencode
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 app.secret_key = secrets.token_hex(16)  # Generate a random secret key for session management
@@ -14,9 +17,12 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Add this line
 app.config['SESSION_COOKIE_SECURE'] = False     # For development (set to True in production with HTTPS)
 
 # Google OAuth configuration
-# NOTE: You will need to create a project in Google Cloud Console to get these credentials
-GOOGLE_CLIENT_ID = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-GOOGLE_CLIENT_SECRET = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+
+if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+    raise ValueError("Google OAuth credentials are not set in environment variables.")
+
 GOOGLE_REDIRECT_URI = "http://localhost:3000/auth/google/callback"
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
