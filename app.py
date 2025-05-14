@@ -9,7 +9,7 @@ from urllib.parse import urlencode
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv(".env", verbose=True, override=True)  # Load environment variables from .env file
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 app.secret_key = secrets.token_hex(16)  # Generate a random secret key for session management
@@ -19,6 +19,8 @@ app.config['SESSION_COOKIE_SECURE'] = False     # For development (set to True i
 # Google OAuth configuration
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+print(f"GOOGLE_CLIENT_ID: {GOOGLE_CLIENT_ID}")
+print(f"GOOGLE_CLIENT_SECRET: {GOOGLE_CLIENT_SECRET}")
 
 if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
     raise ValueError("Google OAuth credentials are not set in environment variables.")
